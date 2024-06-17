@@ -1,2 +1,0 @@
-[console_scripts]
-pankb_data_prep = pankb_data_prep.cli:main
