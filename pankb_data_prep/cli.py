@@ -37,7 +37,7 @@ def main_family(args):
     summary_table.family_summary_table(args.name, args.gtdb_meta, args.output)
 
 def main_species(args):
-    summary_table.species_pangenome_summary(args.name, args.gp_binry, args.summary, args.gtdb_meta, args.output, args.output_json)
+    summary_table.species_pangenome_summary(args.name, args.gp_binary, args.summary, args.gtdb_meta, args.output, args.output_json)
 
 def ask_select_mode(args):
     logging.error("Please select a mode, see --help for more info.")
