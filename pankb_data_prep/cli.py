@@ -114,7 +114,7 @@ def main():
             help="Output file.",
         )
     for x in ["species", "all"]:
-        parsers[].add_argument(
+        parsers[x].add_argument(
             "--output_json",
             type=str,
             required=True,
