@@ -7,6 +7,7 @@ from . import (
     isolation_source,
     eggnog_summary,
     summary_table,
+    mash_list,
 )
 
 logging.basicConfig(
@@ -42,6 +43,10 @@ def main_species(args):
 def main_all(args):
     summary_table.pangenome_summary(args.species_summary, args.output_json, args.output_genome_count, args.output_gene_count)
 
+def main_mash(args):
+    genomes = get_genome_list(args)
+    mash_list.generate_mash_list(genomes, args.gtdb_meta, args.mash_file, args.output)
+
 def ask_select_mode(args):
     logging.error("Please select a mode, see --help for more info.")
 
@@ -62,6 +67,7 @@ def main():
         "family": main_family,
         "species": main_species,
         "all": main_all,
+        "mash": main_mash,
     }
     parsers = {}
     for x, f in modes.items():
@@ -106,7 +112,7 @@ def main():
         required=True,
         help="Pangenome reference fasta file.",
     )
-    for x in ["isosource", "eggnog", "family", "species"]:
+    for x in ["isosource", "eggnog", "family", "species", "mash"]:
         parsers[x].add_argument(
             "--output", "-o",
             type=str,
@@ -120,7 +126,7 @@ def main():
             required=True,
             help="Output in json format.",
         )
-    for x in ["family", "species"]:
+    for x in ["family", "species", "mash"]:
         parsers[x].add_argument(
             "--gtdb_meta",
             type=str,
@@ -144,6 +150,12 @@ def main():
         type=str,
         required=True,
         help="Gene count json file.",
+    )
+    parsers["mash"].add_argument(
+        "--mash_file",
+        type=str,
+        required=True,
+        help="Mash file df_mash.csv.",
     )
     # parser.add_argument(
     #     "--version", action="version", version="%(prog)s " + __version__
