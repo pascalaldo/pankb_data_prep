@@ -9,6 +9,7 @@ setup(
         "numpy==1.26.4",
         "requests==2.32.3",
         "beautifulsoup4==4.12.3",
+        "biopython==1.83",
     ],
     package_data={"pankb_data_prep": []},
     entry_points={"console_scripts": ["pankb_data_prep=pankb_data_prep.cli:main"]},
