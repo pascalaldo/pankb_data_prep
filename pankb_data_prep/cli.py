@@ -81,12 +81,13 @@ def main():
             help="Family or analysis name to output data for.",
         )
 
-    parsers["isosource"].add_argument(
-        "--genomes", "-g",
-        type=str,
-        required=True,
-        help="Genome IDs to process.",
-    )
+    for x in ["isosource", "mash"]:
+        parsers[x].add_argument(
+            "--genomes", "-g",
+            type=str,
+            required=True,
+            help="Genome IDs to process.",
+        )
     for x in ["eggnog", "species"]:
         parsers[x].add_argument(
             "--gp_binary",
