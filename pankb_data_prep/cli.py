@@ -39,6 +39,9 @@ def main_family(args):
 def main_species(args):
     summary_table.species_pangenome_summary(args.name, args.gp_binary, args.summary, args.gtdb_meta, args.output, args.output_json)
 
+def main_all(args):
+    summary_table.pangenome_summary(args.species_summary, args.output_json, args.output_genome_count, args.output_gene_count)
+
 def ask_select_mode(args):
     logging.error("Please select a mode, see --help for more info.")
 
@@ -58,6 +61,7 @@ def main():
         "eggnog": main_eggnog,
         "family": main_family,
         "species": main_species,
+        "all": main_all,
     }
     parsers = {}
     for x, f in modes.items():
@@ -109,12 +113,13 @@ def main():
             required=True,
             help="Output file.",
         )
-    parsers["species"].add_argument(
-        "--output_json",
-        type=str,
-        required=True,
-        help="Output in json format.",
-    )
+    for x in ["species", "all"]:
+        parsers[].add_argument(
+            "--output_json",
+            type=str,
+            required=True,
+            help="Output in json format.",
+        )
     for x in ["family", "species"]:
         parsers[x].add_argument(
             "--gtdb_meta",
@@ -122,6 +127,24 @@ def main():
             required=True,
             help="GTDB meta csv file.",
         )
+    parsers["all"].add_argument(
+        "--species_summary",
+        type=str,
+        required=True,
+        help="Species summary csv file.",
+    )
+    parsers["all"].add_argument(
+        "--output_genome_count",
+        type=str,
+        required=True,
+        help="Genome count json file.",
+    )
+    parsers["all"].add_argument(
+        "--output_gene_count",
+        type=str,
+        required=True,
+        help="Gene count json file.",
+    )
     # parser.add_argument(
     #     "--version", action="version", version="%(prog)s " + __version__
     # )

@@ -17,7 +17,12 @@ def family_summary_table(family, gtdb_meta_path, family_summary_path):
 
 
 def species_pangenome_summary(
-    analysis_name, gp_binary_path, summary_v2_path, gtdb_meta_path, species_summary_csv_path, species_summary_json_path,
+    analysis_name,
+    gp_binary_path,
+    summary_v2_path,
+    gtdb_meta_path,
+    species_summary_csv_path,
+    species_summary_json_path,
 ):
     df_gp_binary = pd.read_csv(gp_binary_path, index_col="Gene", low_memory=False)
     df_pangene_summary = pd.read_csv(summary_v2_path, low_memory=False, index_col=0)
@@ -25,7 +30,7 @@ def species_pangenome_summary(
 
     genomes = df_gp_binary.columns.tolist()
     n_genomes = len(genomes)
-    n_genes= int(df_pangene_summary.shape[0])
+    n_genes = int(df_pangene_summary.shape[0])
 
     # TODO
     # print(set(df_gtdb_meta.loc[genomes, "Family"]))
@@ -35,22 +40,36 @@ def species_pangenome_summary(
 
     species = str(df_gtdb_meta.loc[genomes[0], "Organism"]).replace("s__", "")
     family = str(df_gtdb_meta.loc[genomes[0], "Family"]).replace("f__", "")
-    
-    core_len = int(df_pangene_summary.loc[df_pangene_summary["pangenome_class_2"] == "Core", "pangenome_class_2"].count())
-    rare_len = int(df_pangene_summary.loc[df_pangene_summary["pangenome_class_2"] == "Rare", "pangenome_class_2"].count())
-    accessory_len = int(df_pangene_summary.loc[df_pangene_summary["pangenome_class_2"] == "Accessory", "pangenome_class_2"].count())
 
-    df = pd.DataFrame({
-        "Pangenome_analyses": [analysis_name],
-        "Family": [family],
-        "Species": [species],
-        "N_of_genome": [n_genomes],
-        "N_of_gene": [n_genes],
-        "N_of_core": [core_len],
-        "N_of_rare": [rare_len],
-        "N_of_accessory": [accessory_len],
-        "Openness": ["Open"],
-    })
+    core_len = int(
+        df_pangene_summary.loc[
+            df_pangene_summary["pangenome_class_2"] == "Core", "pangenome_class_2"
+        ].count()
+    )
+    rare_len = int(
+        df_pangene_summary.loc[
+            df_pangene_summary["pangenome_class_2"] == "Rare", "pangenome_class_2"
+        ].count()
+    )
+    accessory_len = int(
+        df_pangene_summary.loc[
+            df_pangene_summary["pangenome_class_2"] == "Accessory", "pangenome_class_2"
+        ].count()
+    )
+
+    df = pd.DataFrame(
+        {
+            "Pangenome_analyses": [analysis_name],
+            "Family": [family],
+            "Species": [species],
+            "N_of_genome": [n_genomes],
+            "N_of_gene": [n_genes],
+            "N_of_core": [core_len],
+            "N_of_rare": [rare_len],
+            "N_of_accessory": [accessory_len],
+            "Openness": ["Open"],
+        }
+    )
     df.to_csv(species_summary_csv_path, index=False)
 
     json_data = {
@@ -62,3 +81,33 @@ def species_pangenome_summary(
     }
     with open(species_summary_json_path, "w") as f:
         json.dump(json_data, f)
+
+
+def pangenome_summary(species_summary_path, species_list_out_path, genome_count_out_path, gene_count_out_path):
+    df = pd.read_csv(species_summary_path)
+
+    json_data = {
+        "Family": df["Family"].tolist(),
+        "Species": df["Species"].tolist(),
+        "Openness": df["Openness"].tolist(),
+        "N_of_genome": df["N_of_genome"].astype(int).tolist(),
+        "Pangenome_analyses": df["Pangenome_analyses"].tolist(),
+        "Gene_class": list(
+            map(
+                list,
+                zip(
+                    *[
+                        df[x].astype(int).tolist()
+                        for x in ["N_of_core", "N_of_accessory", "N_of_rare"]
+                    ]
+                ),
+            )
+        ),
+    }
+    with open(output_json_path, "w") as f:
+        json.dump(json_data, f)
+
+    family_group = df.groupby("Family")
+    family_group["N_of_genome"].sum().sort_values(ascending=False).to_json(genome_count_out_path, orient='index')
+
+    family_group["N_of_gene"].sum().sort_values(ascending=False).to_json(gene_count_out_path, orient='index')
