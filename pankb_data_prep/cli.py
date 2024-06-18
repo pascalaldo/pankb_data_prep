@@ -34,7 +34,10 @@ def main_eggnog(args):
     )
 
 def main_family(args):
-    summary_table.family_summary_table(args.family, args.gtdb_meta, args.output)
+    summary_table.family_summary_table(args.name, args.gtdb_meta, args.output)
+
+def main_species(args):
+    summary_table.species_pangenome_summary(args.name, args.gp_binry, args.summary, args.gtdb_meta, args.output, args.output_json)
 
 def ask_select_mode(args):
     logging.error("Please select a mode, see --help for more info.")
@@ -54,17 +57,19 @@ def main():
         "isosource": main_isosource,
         "eggnog": main_eggnog,
         "family": main_family,
+        "species": main_species,
     }
     parsers = {}
     for x, f in modes.items():
         parsers[x] = subparsers.add_parser(x)
         parsers[x].set_defaults(func=f)
 
-    parsers["family"].add_argument(
-        "family",
-        type=str,
-        help="Family name to output data for.",
-    )
+    for x in ["family", "species"]:
+        parsers[x].add_argument(
+            "name",
+            type=str,
+            help="Family or analysis name to output data for.",
+        )
 
     parsers["isosource"].add_argument(
         "--genomes", "-g",
@@ -72,18 +77,19 @@ def main():
         required=True,
         help="Genome IDs to process.",
     )
-    parsers["eggnog"].add_argument(
-        "--gp_binary",
-        type=str,
-        required=True,
-        help="Gene presence binary csv file.",
-    )
-    parsers["eggnog"].add_argument(
-        "--summary",
-        type=str,
-        required=True,
-        help="Pangene summary csv file.",
-    )
+    for x in ["eggnog", "species"]:
+        parsers[x].add_argument(
+            "--gp_binary",
+            type=str,
+            required=True,
+            help="Gene presence binary csv file.",
+        )
+        parsers[x].add_argument(
+            "--summary",
+            type=str,
+            required=True,
+            help="Pangene summary csv file.",
+        )
     parsers["eggnog"].add_argument(
         "--eggnog_table",
         type=str,
@@ -96,19 +102,26 @@ def main():
         required=True,
         help="Pangenome reference fasta file.",
     )
-    for x in ["isosource", "eggnog", "family"]:
+    for x in ["isosource", "eggnog", "family", "species"]:
         parsers[x].add_argument(
             "--output", "-o",
             type=str,
             required=True,
             help="Output file.",
         )
-    parsers["family"].add_argument(
-        "--gtdb_meta",
+    parsers["species"].add_argument(
+        "--output_json",
         type=str,
         required=True,
-        help="GTDB meta csv file.",
+        help="Output in json format.",
     )
+    for x in ["family", "species"]:
+        parsers[x].add_argument(
+            "--gtdb_meta",
+            type=str,
+            required=True,
+            help="GTDB meta csv file.",
+        )
     # parser.add_argument(
     #     "--version", action="version", version="%(prog)s " + __version__
     # )
