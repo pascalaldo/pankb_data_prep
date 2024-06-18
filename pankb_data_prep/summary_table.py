@@ -104,7 +104,7 @@ def pangenome_summary(species_summary_path, species_list_out_path, genome_count_
             )
         ),
     }
-    with open(output_json_path, "w") as f:
+    with open(species_list_out_path, "w") as f:
         json.dump(json_data, f)
 
     family_group = df.groupby("Family")
