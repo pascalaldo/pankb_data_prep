@@ -96,7 +96,7 @@ def main():
         required=True,
         help="Pangenome reference fasta file.",
     )
-    for x in ["isosource", "eggnog"]:
+    for x in ["isosource", "eggnog", "family"]:
         parsers[x].add_argument(
             "--output", "-o",
             type=str,
