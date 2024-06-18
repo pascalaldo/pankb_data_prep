@@ -25,7 +25,7 @@ def species_pangenome_summary(
 
     genomes = df_gp_binary.columns.tolist()
     n_genomes = len(genomes)
-    n_genes= df_pangene_summary.shape[0]
+    n_genes= int(df_pangene_summary.shape[0])
 
     # TODO
     # print(set(df_gtdb_meta.loc[genomes, "Family"]))
@@ -34,11 +34,11 @@ def species_pangenome_summary(
     # assert len(set(df_gtdb_meta.loc[genomes, "Species"])) == 1 # Make sure that all the genomes in the analysis are from the same species
 
     species = str(df_gtdb_meta.loc[genomes[0], "Organism"]).replace("s__", "")
-    family = df_gtdb_meta.loc[genomes[0], "Family"].replace("f__", "")
+    family = str(df_gtdb_meta.loc[genomes[0], "Family"]).replace("f__", "")
     
-    core_len = df_pangene_summary.loc[df_pangene_summary["pangenome_class_2"] == "Core", "pangenome_class_2"].count()
-    rare_len = df_pangene_summary.loc[df_pangene_summary["pangenome_class_2"] == "Rare", "pangenome_class_2"].count()
-    accessory_len = df_pangene_summary.loc[df_pangene_summary["pangenome_class_2"] == "Accessory", "pangenome_class_2"].count()
+    core_len = int(df_pangene_summary.loc[df_pangene_summary["pangenome_class_2"] == "Core", "pangenome_class_2"].count())
+    rare_len = int(df_pangene_summary.loc[df_pangene_summary["pangenome_class_2"] == "Rare", "pangenome_class_2"].count())
+    accessory_len = int(df_pangene_summary.loc[df_pangene_summary["pangenome_class_2"] == "Accessory", "pangenome_class_2"].count())
 
     df = pd.DataFrame({
         "Pangenome_analyses": [analysis_name],
