@@ -60,4 +60,5 @@ def species_pangenome_summary(
         "Gene_class": [core_len, accessory_len, rare_len],
         "Openness": "Open",
     }
-    json.dump(json_data, species_summary_json_path)
+    with open(species_summary_json_path, "w") as f:
+        json.dump(json_data, f)
