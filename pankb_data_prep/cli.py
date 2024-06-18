@@ -8,6 +8,7 @@ from . import (
     eggnog_summary,
     summary_table,
     mash_list,
+    heatmap,
 )
 
 logging.basicConfig(
@@ -47,6 +48,18 @@ def main_mash(args):
     genomes = get_genome_list(args)
     mash_list.generate_mash_list(genomes, args.gtdb_meta, args.mash_file, args.output)
 
+def main_heatmap(args):
+    heatmap.generate_heatmap(
+        args.gp_binary,
+        args.gp_locustag,
+        args.summary,
+        args.eggnog_summary,
+        args.mash_list,
+        args.isosource,
+        args.species_info,
+        args.output,
+    )
+
 def ask_select_mode(args):
     logging.error("Please select a mode, see --help for more info.")
 
@@ -68,6 +81,7 @@ def main():
         "species": main_species,
         "all": main_all,
         "mash": main_mash,
+        "heatmap": main_heatmap,
     }
     parsers = {}
     for x, f in modes.items():
@@ -88,7 +102,13 @@ def main():
             required=True,
             help="Genome IDs to process.",
         )
-    for x in ["eggnog", "species"]:
+    parsers["heatmap"].add_argument(
+        "--gp_locustag",
+        type=str,
+        required=True,
+        help="Gene presence locustag csv file.",
+    )
+    for x in ["eggnog", "species", "heatmap"]:
         parsers[x].add_argument(
             "--gp_binary",
             type=str,
@@ -107,6 +127,12 @@ def main():
         required=True,
         help="Eggnog table file (.emapper.annotations).",
     )
+    parsers["heatmap"].add_argument(
+        "--eggnog_summary",
+        type=str,
+        required=True,
+        help="Eggnog summary file.",
+    )
     parsers["eggnog"].add_argument(
         "--reference",
         type=str,
@@ -120,7 +146,7 @@ def main():
             required=True,
             help="Output file.",
         )
-    for x in ["species", "all"]:
+    for x in ["species", "all", "heatmap"]:
         parsers[x].add_argument(
             "--output_json",
             type=str,
@@ -157,6 +183,24 @@ def main():
         type=str,
         required=True,
         help="Mash file df_mash.csv.",
+    )
+    parsers["heatmap"].add_argument(
+        "--mash_list",
+        type=str,
+        required=True,
+        help="Mash list file.",
+    )
+    parsers["heatmap"].add_argument(
+        "--isosource",
+        type=str,
+        required=True,
+        help="Isolation source file.",
+    )
+    parsers["heatmap"].add_argument(
+        "--species_info",
+        type=str,
+        required=True,
+        help="Species info df_ncbi_meta csv file.",
     )
     # parser.add_argument(
     #     "--version", action="version", version="%(prog)s " + __version__
