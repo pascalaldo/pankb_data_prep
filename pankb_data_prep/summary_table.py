@@ -1,6 +1,8 @@
 import pandas as pd
 
 def family_summary_table(family, gtdb_meta_path, family_summary_path):
+    if not family.startswith("f__"):
+        family = f"f__{family}"
     df = pd.read_csv(gtdb_meta_path, low_memory = False, index_col=0).loc[:,["Family","gc_percentage", "genome_size"]]
     df['source'] = 'ncbi'
     df['gc_content'] = round((df['gc_percentage'])*0.01, 3)
