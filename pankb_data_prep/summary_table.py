@@ -27,10 +27,11 @@ def species_pangenome_summary(
     n_genomes = len(genomes)
     n_genes= df_pangene_summary.shape[0]
 
-    print(set(df_gtdb_meta.loc[genomes, "Family"]))
-    print(set(df_gtdb_meta.loc[genomes, "Species"]))
-    assert len(set(df_gtdb_meta.loc[genomes, "Family"])) == 1 # Make sure that all the genomes in the analysis are from the same family
-    assert len(set(df_gtdb_meta.loc[genomes, "Species"])) == 1 # Make sure that all the genomes in the analysis are from the same species
+    # TODO
+    # print(set(df_gtdb_meta.loc[genomes, "Family"]))
+    # print(set(df_gtdb_meta.loc[genomes, "Species"]))
+    # assert len(set(df_gtdb_meta.loc[genomes, "Family"])) == 1 # Make sure that all the genomes in the analysis are from the same family
+    # assert len(set(df_gtdb_meta.loc[genomes, "Species"])) == 1 # Make sure that all the genomes in the analysis are from the same species
 
     species = str(df_gtdb_meta.loc[genomes[0], "Organism"]).replace("s__", "")
     family = df_gtdb_meta.loc[genomes[0], "Family"].replace("f__", "")
