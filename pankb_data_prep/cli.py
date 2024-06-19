@@ -10,6 +10,10 @@ from . import (
     mash_list,
     heatmap,
     cog_data,
+    heaps_law,
+    gene_locustag,
+    genome_page,
+    landing_page,
 )
 
 logging.basicConfig(
@@ -68,6 +72,35 @@ def main_cog(args):
         args.output_json,
     )
 
+def main_heaps(args):
+    heaps_law.heaps_law(
+        args.gp_binary,
+        args.output_json,
+    )
+
+def main_locustag(args):
+    gene_locustag.generate_locustag_data(
+        args.gp_locustag,
+        args.all_locustag,
+        args.output,
+    )
+
+def main_genome(args):
+    genome_page.generate_genome_page(
+        args.species_summary,
+        args.isosource,
+        args.species_info,
+        args.gp_binary,
+        args.eggnog_summary,
+        args.output,
+    )
+
+def main_landing(args):
+    landing_page.generate_landing_page(
+        args.species_summary,
+        args.output_pankb_dimension,
+        args.output_json,
+    )
 def ask_select_mode(args):
     logging.error("Please select a mode, see --help for more info.")
 
@@ -91,6 +124,10 @@ def main():
         "mash": main_mash,
         "heatmap": main_heatmap,
         "cog": main_cog,
+        "heaps": main_heaps,
+        "locustag": main_locustag,
+        "genome": main_genome,
+        "landing": main_landing,
     }
     parsers = {}
     for x, f in modes.items():
@@ -117,19 +154,14 @@ def main():
         required=True,
         help="Gene presence locustag csv file.",
     )
-    parsers["cog"].add_argument(
-        "--gp_binary",
-        type=str,
-        required=True,
-        help="Gene presence binary csv file.",
-    )
-    for x in ["eggnog", "species", "heatmap"]:
+    for x in ["eggnog", "species", "heatmap", "cog", "heaps", "locustag", "genome"]:
         parsers[x].add_argument(
             "--gp_binary",
             type=str,
             required=True,
             help="Gene presence binary csv file.",
         )
+    for x in ["eggnog", "species", "heatmap", "genome"]:
         parsers[x].add_argument(
             "--summary",
             type=str,
@@ -142,7 +174,7 @@ def main():
         required=True,
         help="Eggnog table file (.emapper.annotations).",
     )
-    for x in ["heatmap", "cog"]:
+    for x in ["heatmap", "cog", "genome"]:
         parsers[x].add_argument(
             "--eggnog_summary",
             type=str,
@@ -155,14 +187,14 @@ def main():
         required=True,
         help="Pangenome reference fasta file.",
     )
-    for x in ["isosource", "eggnog", "family", "species", "mash"]:
+    for x in ["isosource", "eggnog", "family", "species", "mash", "locustag"]:
         parsers[x].add_argument(
             "--output", "-o",
             type=str,
             required=True,
-            help="Output file.",
+            help="Output file or directory.",
         )
-    for x in ["species", "all", "heatmap", "cog"]:
+    for x in ["species", "all", "heatmap", "cog", "heaps", "landing"]:
         parsers[x].add_argument(
             "--output_json",
             type=str,
@@ -176,12 +208,13 @@ def main():
             required=True,
             help="GTDB meta csv file.",
         )
-    parsers["all"].add_argument(
-        "--species_summary",
-        type=str,
-        required=True,
-        help="Species summary csv file.",
-    )
+    for x in ["all", "genome", "landing"]:
+        parsers[x].add_argument(
+            "--species_summary",
+            type=str,
+            required=True,
+            help="Species summary csv file.",
+        )
     parsers["all"].add_argument(
         "--output_genome_count",
         type=str,
@@ -190,6 +223,12 @@ def main():
     )
     parsers["all"].add_argument(
         "--output_gene_count",
+        type=str,
+        required=True,
+        help="Gene count json file.",
+    )
+    parsers["landing"].add_argument(
+        "--output_pankb_dimension",
         type=str,
         required=True,
         help="Gene count json file.",
@@ -206,17 +245,24 @@ def main():
         required=True,
         help="Mash list file.",
     )
-    parsers["heatmap"].add_argument(
-        "--isosource",
+    for x in ["heatmap", "genome"]:
+        parsers[x].add_argument(
+            "--isosource",
+            type=str,
+            required=True,
+            help="Isolation source file.",
+        )
+        parsers[x].add_argument(
+            "--species_info",
+            type=str,
+            required=True,
+            help="Species info df_ncbi_meta csv file.",
+        )
+    parsers["locustag"].add_argument(
+        "--all_locustag",
         type=str,
         required=True,
-        help="Isolation source file.",
-    )
-    parsers["heatmap"].add_argument(
-        "--species_info",
-        type=str,
-        required=True,
-        help="Species info df_ncbi_meta csv file.",
+        help="Locustag info df_all_locustag csv file.",
     )
     # parser.add_argument(
     #     "--version", action="version", version="%(prog)s " + __version__
