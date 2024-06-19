@@ -40,6 +40,9 @@ def main_eggnog(args):
         args.output,
     )
 
+def main_full(args):
+    summary_table.full_summary_table(args.gtdb_meta, args.output)
+
 def main_family(args):
     summary_table.family_summary_table(args.name, args.gtdb_meta, args.output)
 
@@ -119,6 +122,7 @@ def main():
     modes = {
         "isosource": main_isosource,
         "eggnog": main_eggnog,
+        "full": main_full,
         "family": main_family,
         "species": main_species,
         "all": main_all,
@@ -189,7 +193,7 @@ def main():
         required=True,
         help="Pangenome reference fasta file.",
     )
-    for x in ["isosource", "eggnog", "family", "species", "mash", "genome", "locustag"]:
+    for x in ["isosource", "eggnog", "full", "family", "species", "mash", "genome", "locustag"]:
         parsers[x].add_argument(
             "--output", "-o",
             type=str,
@@ -203,7 +207,7 @@ def main():
             required=True,
             help="Output in json format.",
         )
-    for x in ["family", "species", "mash"]:
+    for x in ["full", "family", "species", "mash"]:
         parsers[x].add_argument(
             "--gtdb_meta",
             type=str,

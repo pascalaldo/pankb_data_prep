@@ -30,7 +30,7 @@ def generate_landing_page(species_summary_path, pankb_dimension_path, species_ge
     for family in sorted(set(df_species_summaries["Family"].tolist())):
         family_genome_gene[family] = {}
 
-        for species, row in df_species_summaries.loc[df_species_summaries["Family"] == family, :]:
+        for species, row in df_species_summaries.loc[df_species_summaries["Family"] == family, :].iterrows():
             family_genome_gene[family][species] = [int(row["N_of_genome"]), int(row["N_of_gene"])]
         
     with open(species_genome_gene_path, 'w') as f:

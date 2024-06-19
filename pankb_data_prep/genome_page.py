@@ -20,17 +20,17 @@ def generate_genome_page(
     species_info["full_name"] = (
         species_info.genus + " " + species_info.species + " " + species_info.strain
     )
-    species_info_selectd = species_info.loc[list(isolation_src.index), :]
+    species_info_selected = species_info.loc[list(isolation_src.index), :]
     genome_info = pd.concat(
         [
-            isolation_src.loc[list(species_info_selectd.index), :],
+            isolation_src.loc[list(species_info_selected.index), :],
             pd.concat(
                 [
                     genome_summary.loc[
-                        list(species_info_selectd.index),
+                        list(species_info_selected.index),
                         ["source", "gc_content", "genome_len"],
                     ],
-                    species_info_selectd.loc[:, ["full_name"]],
+                    species_info_selected.loc[:, ["full_name"]],
                 ],
                 axis=1,
             ),
