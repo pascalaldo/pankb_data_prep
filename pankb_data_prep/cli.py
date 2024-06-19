@@ -57,7 +57,7 @@ def main_heatmap(args):
         args.mash_list,
         args.isosource,
         args.species_info,
-        args.output,
+        args.output_json,
     )
 
 def ask_select_mode(args):
