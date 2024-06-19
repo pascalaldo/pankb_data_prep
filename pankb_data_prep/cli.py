@@ -154,7 +154,7 @@ def main():
         required=True,
         help="Gene presence locustag csv file.",
     )
-    for x in ["eggnog", "species", "heatmap", "cog", "heaps", "locustag", "genome"]:
+    for x in ["eggnog", "species", "heatmap", "cog", "heaps", "genome"]:
         parsers[x].add_argument(
             "--gp_binary",
             type=str,
