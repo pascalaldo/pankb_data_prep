@@ -64,7 +64,6 @@ def main_heatmap(args):
 def main_cog(args):
     cog_data.generate_cog_data(
         args.eggnog_summary,
-        args.summary,
         args.gp_binary,
         args.output_json,
     )
@@ -118,7 +117,13 @@ def main():
         required=True,
         help="Gene presence locustag csv file.",
     )
-    for x in ["eggnog", "species", "heatmap", "cog"]:
+    parsers["cog"].add_argument(
+        "--gp_binary",
+        type=str,
+        required=True,
+        help="Gene presence binary csv file.",
+    )
+    for x in ["eggnog", "species", "heatmap"]:
         parsers[x].add_argument(
             "--gp_binary",
             type=str,
