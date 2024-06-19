@@ -64,7 +64,7 @@ def main_heatmap(args):
 def main_cog(args):
     cog_data.generate_cog_data(
         args.eggnog_summary,
-        args.summary_v2,
+        args.summary,
         args.gp_binary,
         args.output_json,
     )
