@@ -194,7 +194,7 @@ def main():
             required=True,
             help="Output file or directory.",
         )
-    for x in ["species", "all", "heatmap", "cog", "heaps", "landing"]:
+    for x in ["species", "all", "heatmap", "cog", "heaps", "genome", "landing"]:
         parsers[x].add_argument(
             "--output_json",
             type=str,

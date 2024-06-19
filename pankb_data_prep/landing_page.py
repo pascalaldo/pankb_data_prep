@@ -1,4 +1,5 @@
 import pandas as pd
+import json
 
 def generate_landing_page(species_summary_path, pankb_dimension_path, species_genome_gene_path):
     df_species_summaries = pd.read_csv(species_summary_path, index_col=0)
