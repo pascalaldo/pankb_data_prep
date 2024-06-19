@@ -60,6 +60,14 @@ def main_heatmap(args):
         args.output_json,
     )
 
+def main_cog(args):
+    cog_data.generate_cog_data(
+        args.eggnog_summary,
+        args.summary_v2,
+        args.gp_binary,
+        args.output_json,
+    )
+
 def ask_select_mode(args):
     logging.error("Please select a mode, see --help for more info.")
 
@@ -82,6 +90,7 @@ def main():
         "all": main_all,
         "mash": main_mash,
         "heatmap": main_heatmap,
+        "cog": main_cog,
     }
     parsers = {}
     for x, f in modes.items():
@@ -108,7 +117,7 @@ def main():
         required=True,
         help="Gene presence locustag csv file.",
     )
-    for x in ["eggnog", "species", "heatmap"]:
+    for x in ["eggnog", "species", "heatmap", "cog"]:
         parsers[x].add_argument(
             "--gp_binary",
             type=str,
@@ -127,12 +136,13 @@ def main():
         required=True,
         help="Eggnog table file (.emapper.annotations).",
     )
-    parsers["heatmap"].add_argument(
-        "--eggnog_summary",
-        type=str,
-        required=True,
-        help="Eggnog summary file.",
-    )
+    for x in ["heatmap", "cog"]:
+        parsers[x].add_argument(
+            "--eggnog_summary",
+            type=str,
+            required=True,
+            help="Eggnog summary file.",
+        )
     parsers["eggnog"].add_argument(
         "--reference",
         type=str,
@@ -146,7 +156,7 @@ def main():
             required=True,
             help="Output file.",
         )
-    for x in ["species", "all", "heatmap"]:
+    for x in ["species", "all", "heatmap", "cog"]:
         parsers[x].add_argument(
             "--output_json",
             type=str,
