@@ -157,7 +157,6 @@ def generate_heatmap(
         "matrix": matrix(gp_binary_ordered.loc[:, target_gene_ordered]),
     }
 
-    heatmap_target_path = Path(heatmap_target_path)
     with open(heatmap_target_path, "w") as file:
         json.dump(result_dict_target, file)
 
