@@ -31,7 +31,7 @@ def generate_landing_page(species_summary_path, pankb_dimension_path, species_ge
         family_genome_gene[family] = {}
 
         for species, row in df_species_summaries.loc[df_species_summaries["Family"] == family, :]:
-            family_genome_gene[family][species] = [row["N_of_genome"], row["N_of_gene"]]
+            family_genome_gene[family][species] = [int(row["N_of_genome"]), int(row["N_of_gene"])]
         
     with open(species_genome_gene_path, 'w') as f:
         json.dump(family_genome_gene, f)

@@ -148,12 +148,13 @@ def main():
             required=True,
             help="Genome IDs to process.",
         )
-    parsers["heatmap"].add_argument(
-        "--gp_locustag",
-        type=str,
-        required=True,
-        help="Gene presence locustag csv file.",
-    )
+    for x in ["heatmap", "locustag"]:
+        parsers[x].add_argument(
+            "--gp_locustag",
+            type=str,
+            required=True,
+            help="Gene presence locustag csv file.",
+        )
     for x in ["eggnog", "species", "heatmap", "cog", "heaps", "genome"]:
         parsers[x].add_argument(
             "--gp_binary",
@@ -187,14 +188,14 @@ def main():
         required=True,
         help="Pangenome reference fasta file.",
     )
-    for x in ["isosource", "eggnog", "family", "species", "mash", "locustag"]:
+    for x in ["isosource", "eggnog", "family", "species", "mash", "genome", "locustag"]:
         parsers[x].add_argument(
             "--output", "-o",
             type=str,
             required=True,
             help="Output file or directory.",
         )
-    for x in ["species", "all", "heatmap", "cog", "heaps", "genome", "landing"]:
+    for x in ["species", "all", "heatmap", "cog", "heaps", "landing"]:
         parsers[x].add_argument(
             "--output_json",
             type=str,
