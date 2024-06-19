@@ -9,6 +9,7 @@ from . import (
     summary_table,
     mash_list,
     heatmap,
+    cog_data,
 )
 
 logging.basicConfig(
