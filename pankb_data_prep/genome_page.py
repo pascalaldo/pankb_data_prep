@@ -129,7 +129,7 @@ def generate_genome_page(
             json.dump(class_json, file)
 
         # Genome info
-        genoem_info_file = genome_id_folder / "genome_info.json"
+        genome_info_file = genome_id_folder / "genome_info.json"
         gene_class_distribution = [
             sum(cog_presence["pangenome_class_2"] == "Core"),
             sum(cog_presence["pangenome_class_2"] == "Accessory"),
@@ -139,4 +139,4 @@ def generate_genome_page(
             [genome_info.loc[genome_id, :]], columns=genome_info.columns
         )
         genome_info_df["Gene_class_distribution"] = [gene_class_distribution]
-        genome_info_df.to_json(path_or_buf=genoem_info_file, orient="index")
+        genome_info_df.to_json(path_or_buf=genome_info_file, orient="index")

@@ -17,9 +17,9 @@ def generate_landing_page(species_summary_path, pankb_dimension_path, species_ge
     #         Core = len(gene_class.loc[gene_class['pangenome_class_2'] == 'Core',:])
     #         N_alleleome += Core
 
-    gene_cluster_count = df_species_summaries["N_of_gene"].sum()
-    genome_count = df_species_summaries["N_of_genome"].sum()
-    species_count = df_species_summaries.shape[0]
+    gene_cluster_count = int(df_species_summaries["N_of_gene"].sum())
+    genome_count = int(df_species_summaries["N_of_genome"].sum())
+    species_count = int(df_species_summaries.shape[0])
     dimension = {'Genes':gene_cluster_count, 'Coding alleleomes': N_alleleome, 
                 'Genomes':genome_count, 'Species pangenomes':species_count,
                 'Species coding alleleomes': Species_coding_alleleome}

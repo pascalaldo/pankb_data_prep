@@ -11,6 +11,8 @@ def remove_slash(s):
         return(s)
 
 def generate_locustag_data(gp_locustag_path, all_locustag_path, gene_locustag_dir):
+    gene_locustag_dir = Path(gene_locustag_dir)
+    gene_locustag_dir.mkdir(parents=True, exist_ok=True)
     df_gene_presence_locustag = pd.read_csv(gp_locustag_path, index_col='Gene',low_memory=False)
     df_gene_presence_locustag.index = [remove_slash(i) for i in list(df_gene_presence_locustag.index)]
     all_locustag_df = pd.read_csv(all_locustag_path, index_col=0, low_memory=False)
@@ -26,6 +28,5 @@ def generate_locustag_data(gp_locustag_path, all_locustag_path, gene_locustag_di
                 gene_locustag.append(f"{genome_id}@{locus_tag}")
 
         # Write the JSON object to a file
-        gene_locustag_dir = Path(gene_locustag_dir)
         with open(gene_locustag_dir / f"{gene_id}.json", 'w') as f:
             json.dump(all_locustag_df.loc[gene_locustag, :].to_dict(orient="records"), f, separators=(',', ':'), ensure_ascii=False)

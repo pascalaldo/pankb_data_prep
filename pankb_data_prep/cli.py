@@ -91,6 +91,7 @@ def main_genome(args):
         args.isosource,
         args.species_info,
         args.gp_binary,
+        args.summary,
         args.eggnog_summary,
         args.output,
     )
