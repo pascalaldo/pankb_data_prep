@@ -3,6 +3,59 @@ import pandas as pd
 import numpy as np
 import gzip
 import logging
+import argparse
+
+
+def initialize_parser(parser):
+    parser.description = "Process data for the heatmap."
+    parser.add_argument(
+        "--gp_locustag",
+        type=str,
+        required=True,
+        help="Gene presence locustag csv file.",
+    )
+    parser.add_argument(
+        "--gp_binary",
+        type=str,
+        required=True,
+        help="Gene presence binary csv file.",
+    )
+    parser.add_argument(
+        "--summary",
+        type=str,
+        required=True,
+        help="Pangene summary csv file.",
+    )
+    parser.add_argument(
+        "--eggnog_summary",
+        type=str,
+        required=True,
+        help="Eggnog summary file.",
+    )
+    parser.add_argument(
+        "--mash_list",
+        type=str,
+        required=True,
+        help="Mash list file.",
+    )
+    parser.add_argument(
+        "--isosource",
+        type=str,
+        required=True,
+        help="Isolation source file.",
+    )
+    parser.add_argument(
+        "--species_info",
+        type=str,
+        required=True,
+        help="Species info df_ncbi_meta csv file.",
+    )
+    parser.add_argument(
+        "--output_json",
+        type=str,
+        required=True,
+        help="Output in json format.",
+    )
 
 
 def gzip_file(input_path, output_path):
@@ -191,3 +244,27 @@ def generate_heatmap(
     #     gzip_file('../web_data/species/' + species + '/heatmap' + '_' + gene_class + '.json', '../web_data/species/' + species + '/heatmap' + '_' + gene_class + '.json.gz')
 
     #     gene_count += len(freq_filtered_gene)
+
+
+def run(args):
+    generate_heatmap(
+        args.gp_binary,
+        args.gp_locustag,
+        args.summary,
+        args.eggnog_summary,
+        args.mash_list,
+        args.isosource,
+        args.species_info,
+        args.output_json,
+    )
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    initialize_parser(parser)
+    args = parser.parse_args()
+    run(args)
+
+
+if __name__ == "__main__":
+    main()

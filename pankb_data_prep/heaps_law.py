@@ -6,6 +6,20 @@ import math
 from scipy.stats import linregress
 import json
 
+def initialize_parser(parser):
+    parser.description = "Process data to apply Heaps law."
+    parser.add_argument(
+        "--gp_binary",
+        type=str,
+        required=True,
+        help="Gene presence binary csv file.",
+    )
+    parser.add_argument(
+        "--output_json",
+        type=str,
+        required=True,
+        help="Output in json format.",
+    )
 
 def heaps_law(gp_binary_path, gene_freq_path):
     gp_binary = pd.read_csv(gp_binary_path, index_col=0)
@@ -114,3 +128,17 @@ def heaps_law(gp_binary_path, gene_freq_path):
     with open(gene_freq_path, 'w') as f:
         json.dump(data_dict, f)
         
+def run(args):
+    heaps_law(
+        args.gp_binary,
+        args.output_json,
+    )
+
+def main():
+    parser = argparse.ArgumentParser()
+    initialize_parser(parser)
+    args = parser.parse_args()
+    run(args)
+
+if __name__=="__main__":
+    main()

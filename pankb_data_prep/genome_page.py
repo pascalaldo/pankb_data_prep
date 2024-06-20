@@ -2,6 +2,55 @@ import json
 import pandas as pd
 import numpy as np
 from pathlib import Path
+import argparse
+from .utilities import COG_TABLE
+
+
+def initialize_parser(parser):
+    parser.description = "Process data required for genome pages."
+    parser.add_argument(
+        "--gp_binary",
+        type=str,
+        required=True,
+        help="Gene presence binary csv file.",
+    )
+    parser.add_argument(
+        "--summary",
+        type=str,
+        required=True,
+        help="Pangene summary csv file.",
+    )
+    parser.add_argument(
+        "--eggnog_summary",
+        type=str,
+        required=True,
+        help="Eggnog summary file.",
+    )
+    parser.add_argument(
+        "--species_summary",
+        type=str,
+        required=True,
+        help="Species summary csv file.",
+    )
+    parser.add_argument(
+        "--isosource",
+        type=str,
+        required=True,
+        help="Isolation source file.",
+    )
+    parser.add_argument(
+        "--species_info",
+        type=str,
+        required=True,
+        help="Species info df_ncbi_meta csv file.",
+    )
+    parser.add_argument(
+        "--output",
+        "-o",
+        type=str,
+        required=True,
+        help="Output file or directory.",
+    )
 
 
 def generate_genome_page(
@@ -41,7 +90,6 @@ def generate_genome_page(
     apm_binary = pd.read_csv(gp_binary_path, index_col=0, low_memory=False)
     summary = pd.read_csv(summary_v2_path, index_col=0, low_memory=False)
     annotation = pd.read_csv(eggnog_summary_path, index_col=0, low_memory=False)
-    cog_category = pd.read_csv("../data/COG_category.csv")
 
     annotation["COG_Categories"] = (
         "[" + annotation["COG_category"] + "]" + annotation["COG_category_name"]
@@ -62,7 +110,7 @@ def generate_genome_page(
         accessory = []
         rare = []
 
-        cog = cog_category.Categories.values.tolist()
+        cog = COG_TABLE.Categories.values.tolist()
         presence_gene_list = list(
             (apm_binary.loc[apm_binary[genome_id] == 1, genome_id]).index
         )
@@ -103,10 +151,10 @@ def generate_genome_page(
                 "Accessory": accessory,
                 "Rare": rare,
                 "Category": "["
-                + cog_category.iloc[:, 0]
+                + COG_TABLE.iloc[:, 0]
                 + "]"
                 + " "
-                + cog_category.iloc[:, 1],
+                + COG_TABLE.iloc[:, 1],
             }
         )
 
@@ -140,3 +188,26 @@ def generate_genome_page(
         )
         genome_info_df["Gene_class_distribution"] = [gene_class_distribution]
         genome_info_df.to_json(path_or_buf=genome_info_file, orient="index")
+
+
+def run(args):
+    generate_genome_page(
+        args.species_summary,
+        args.isosource,
+        args.species_info,
+        args.gp_binary,
+        args.summary,
+        args.eggnog_summary,
+        args.output,
+    )
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    initialize_parser(parser)
+    args = parser.parse_args()
+    run(args)
+
+
+if __name__ == "__main__":
+    main()

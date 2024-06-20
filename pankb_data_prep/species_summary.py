@@ -1,28 +1,44 @@
-import pandas as pd
-import json
+import argparse
 
-def full_summary_table(gtdb_meta_path, full_summary_path):
-    df = pd.read_csv(gtdb_meta_path, low_memory=False, index_col=0).loc[
-        :, ["Family", "gc_percentage", "genome_size"]
-    ]
-    df["source"] = "ncbi"
-    df["gc_content"] = round((df["gc_percentage"]) * 0.01, 3)
-    df["genome_len"] = df["genome_size"].astype(int)
 
-    df.to_csv(full_summary_path)
-
-def family_summary_table(family, gtdb_meta_path, family_summary_path):
-    if not family.startswith("f__"):
-        family = f"f__{family}"
-    df = pd.read_csv(gtdb_meta_path, low_memory=False, index_col=0).loc[
-        :, ["Family", "gc_percentage", "genome_size"]
-    ]
-    df["source"] = "ncbi"
-    df["gc_content"] = round((df["gc_percentage"]) * 0.01, 3)
-    df["genome_len"] = df["genome_size"].astype(int)
-    df = df.loc[df["Family"] == family, :]
-
-    df.to_csv(family_summary_path)
+def initialize_parser(parser):
+    parser.description = "Generate species summary."
+    parser.add_argument(
+        "name",
+        type=str,
+        help="Family or analysis name to output data for.",
+    )
+    parser.add_argument(
+        "--gp_binary",
+        type=str,
+        required=True,
+        help="Gene presence binary csv file.",
+    )
+    parser.add_argument(
+        "--summary",
+        type=str,
+        required=True,
+        help="Pangene summary csv file.",
+    )
+    parser.add_argument(
+        "--gtdb_meta",
+        type=str,
+        required=True,
+        help="GTDB meta csv file.",
+    )
+    parser.add_argument(
+        "--output",
+        "-o",
+        type=str,
+        required=True,
+        help="Output file or directory.",
+    )
+    parser.add_argument(
+        "--output_json",
+        type=str,
+        required=True,
+        help="Output in json format.",
+    )
 
 
 def species_pangenome_summary(
@@ -92,31 +108,23 @@ def species_pangenome_summary(
         json.dump(json_data, f)
 
 
-def pangenome_summary(species_summary_path, species_list_out_path, genome_count_out_path, gene_count_out_path):
-    df = pd.read_csv(species_summary_path)
+def run(args):
+    species_pangenome_summary(
+        args.name,
+        args.gp_binary,
+        args.summary,
+        args.gtdb_meta,
+        args.output,
+        args.output_json,
+    )
 
-    json_data = {
-        "Family": df["Family"].tolist(),
-        "Species": df["Species"].tolist(),
-        "Openness": df["Openness"].tolist(),
-        "N_of_genome": df["N_of_genome"].astype(int).tolist(),
-        "Pangenome_analyses": df["Pangenome_analyses"].tolist(),
-        "Gene_class": list(
-            map(
-                list,
-                zip(
-                    *[
-                        df[x].astype(int).tolist()
-                        for x in ["N_of_core", "N_of_accessory", "N_of_rare"]
-                    ]
-                ),
-            )
-        ),
-    }
-    with open(species_list_out_path, "w") as f:
-        json.dump(json_data, f)
 
-    family_group = df.groupby("Family")
-    family_group["N_of_genome"].sum().sort_values(ascending=False).to_json(genome_count_out_path, orient='index')
+def main():
+    parser = argparse.ArgumentParser()
+    initialize_parser(parser)
+    args = parser.parse_args()
+    run(args)
 
-    family_group["N_of_gene"].sum().sort_values(ascending=False).to_json(gene_count_out_path, orient='index')
+
+if __name__ == "__main__":
+    main()
