@@ -62,7 +62,7 @@ def generate_locustag_data(gp_locustag_path, all_locustag_path, gene_locustag_di
                     else:
                         logging.warn(f"Locustag not in all_locustag_df: {gene_locustag}")
             else:
-                genome_locustag = f"{genome_id}@{locus_tag_id}"
+                genome_locustag = f"{genome_id}@{locus_tag}"
                 if genome_locustag in all_locustag_df.index:
                     gene_locustag.append(genome_locustag)
                 else:
