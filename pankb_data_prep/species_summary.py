@@ -1,5 +1,6 @@
 import argparse
-
+import pandas as pd
+import json
 
 def initialize_parser(parser):
     parser.description = "Generate species summary."

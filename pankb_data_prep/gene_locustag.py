@@ -4,6 +4,7 @@ from Bio import SeqIO
 import json
 from pathlib import Path
 import argparse
+import logging
 
 
 def initialize_parser(parser):
@@ -55,9 +56,17 @@ def generate_locustag_data(gp_locustag_path, all_locustag_path, gene_locustag_di
             if "\t" in locus_tag:
                 locus_tag_list = locus_tag.split("\t")
                 for locus_tag_id in locus_tag_list:
-                    gene_locustag.append(f"{genome_id}@{locus_tag_id}")
+                    genome_locustag = f"{genome_id}@{locus_tag_id}"
+                    if genome_locustag in all_locustag_df.index:
+                        gene_locustag.append(genome_locustag)
+                    else:
+                        logging.warn(f"Locustag not in all_locustag_df: {gene_locustag}")
             else:
-                gene_locustag.append(f"{genome_id}@{locus_tag}")
+                genome_locustag = f"{genome_id}@{locus_tag_id}"
+                if genome_locustag in all_locustag_df.index:
+                    gene_locustag.append(genome_locustag)
+                else:
+                    logging.warn(f"Locustag not in all_locustag_df: {gene_locustag}")
 
         # Write the JSON object to a file
         with open(gene_locustag_dir / f"{gene_id}.json", "w") as f:
