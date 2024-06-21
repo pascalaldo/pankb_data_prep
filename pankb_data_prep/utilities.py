@@ -37,4 +37,5 @@ COG_TABLE = pd.DataFrame.from_dict(
     orient="index",
     columns=["Function details"],
 )
-COG_TABLE.index.name = "Categories"
+# COG_TABLE.index.name = "Categories"
+COG_TABLE["Categories"] = COG_TABLE.index
