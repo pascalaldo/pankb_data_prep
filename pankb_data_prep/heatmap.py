@@ -44,12 +44,12 @@ def initialize_parser(parser):
         required=True,
         help="Isolation source file.",
     )
-    parser.add_argument(
-        "--species_info",
-        type=str,
-        required=True,
-        help="Species info df_ncbi_meta csv file.",
-    )
+    # parser.add_argument(
+    #     "--species_info",
+    #     type=str,
+    #     required=True,
+    #     help="Species info df_ncbi_meta csv file.",
+    # )
     parser.add_argument(
         "--output_json",
         type=str,
@@ -143,7 +143,7 @@ def generate_heatmap(
     eggnog_summary_path,
     mash_list_path,
     isosource_path,
-    species_info_path,
+    # species_info_path,
     heatmap_target_path,
 ):
     # load data
@@ -154,23 +154,24 @@ def generate_heatmap(
     gp_locustag = pd.read_csv(gp_locustag_path, index_col=0, low_memory=False)
     phylo_group = pd.read_csv(mash_list_path, index_col=0, low_memory=False)
     isolation_src = pd.read_csv(isosource_path, index_col=0, low_memory=False)
-    species_info = pd.read_csv(species_info_path, index_col=0, low_memory=False)
+    # species_info = pd.read_csv(species_info_path, index_col=0, low_memory=False)
 
-    species_info["genome_name"] = (
-        species_info["genus"]
-        + " "
-        + species_info["species"]
-        + " "
-        + species_info["strain"]
-    )
+    # species_info["genome_name"] = (
+    #     species_info["genus"]
+    #     + " "
+    #     + species_info["species"]
+    #     + " "
+    #     + species_info["strain"]
+    # )
     source = pd.merge(
-        pd.merge(
-            isolation_src.loc[list(gp_locustag.columns), :],
-            species_info.loc[
-                species_info.index.isin(list(gp_locustag.columns)), "genome_name"
-            ],
-            on=["genome_id"],
-        ),
+        isolation_src.loc[list(gp_locustag.columns), :],
+        # pd.merge(
+            
+        #     species_info.loc[
+        #         species_info.index.isin(list(gp_locustag.columns)), "genome_name"
+        #     ],
+        #     on=["genome_id"],
+        # ),
         phylo_group,
         on=["genome_id"],
     ).sort_values("cluster")
@@ -254,7 +255,7 @@ def run(args):
         args.eggnog_summary,
         args.mash_list,
         args.isosource,
-        args.species_info,
+        # args.species_info,
         args.output_json,
     )
 
